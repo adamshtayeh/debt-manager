@@ -1,0 +1,1 @@
+{"id":1,"name":"Ahmad","initialAmount":500,"amount":750,"notes":"test customer","createdAt":"2026-08-28 19:58:52","payments":[{"id":1,"amount":100,"date":"2026-08-28","note":"first payment"}],"charges":[{"id":1,"amount":250,"date":"2026-08-28","note":"extra purchase"}]}

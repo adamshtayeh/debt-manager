@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debt Manager - Sign In</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <h1 data-i18n="app_name">Debt Manager</h1>
+          <p data-i18n="auth_subtitle">Track your debts and payments securely</p>
+        </div>
+
+        <div class="auth-controls">
+          <button type="button" class="icon-button" id="themeToggle" aria-label="Toggle dark mode">
+            <svg id="themeIcon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <button type="button" class="icon-button" id="langToggle" aria-label="Toggle language">
+            <span id="langIcon">ع</span>
+          </button>
+        </div>
+
+        <div id="loginView" class="auth-view">
+          <h2 data-i18n="sign_in">Sign in</h2>
+          <form id="loginForm" class="auth-form" novalidate>
+            <div class="form-field">
+              <label for="loginEmail" data-i18n="username">Username</label>
+              <input type="text" id="loginEmail" required autocomplete="username" placeholder="Enter username">
+            </div>
+            <div class="form-field">
+              <label for="loginPassword" data-i18n="password">Password</label>
+              <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••" minlength="6">
+            </div>
+            <button type="submit" class="button button-primary button-full" data-i18n="sign_in_button">Sign in</button>
+          </form>
+          <p class="auth-switch">
+            <span data-i18n="no_account">Don't have an account?</span>
+            <button type="button" class="link-button" id="showSignup" data-i18n="create_account">Create account</button>
+          </p>
+        </div>
+
+        <div id="signupView" class="auth-view" hidden>
+          <h2 data-i18n="create_account">Create account</h2>
+          <form id="signupForm" class="auth-form" novalidate>
+            <div class="form-field">
+              <label for="signupEmail" data-i18n="username">Username</label>
+              <input type="text" id="signupEmail" required autocomplete="username" placeholder="Enter username">
+            </div>
+            <div class="form-field">
+              <label for="signupPassword" data-i18n="password">Password</label>
+              <input type="password" id="signupPassword" required autocomplete="new-password" placeholder="••••••••" minlength="6">
+            </div>
+            <div class="form-field">
+              <label for="signupPasswordConfirm" data-i18n="confirm_password">Confirm password</label>
+              <input type="password" id="signupPasswordConfirm" required autocomplete="new-password" placeholder="••••••••" minlength="6">
+            </div>
+            <button type="submit" class="button button-primary button-full" data-i18n="create_account_button">Create account</button>
+          </form>
+          <p class="auth-switch">
+            <span data-i18n="have_account">Already have an account?</span>
+            <button type="button" class="link-button" id="showLogin" data-i18n="sign_in">Sign in</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

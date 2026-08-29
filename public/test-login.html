@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test - Debt Manager</title>
+    <script>
+        async function testLogin() {
+            console.log('Testing login...');
+            const testButton = document.getElementById('testButton');
+            const output = document.getElementById('output');
+
+            testButton.disabled = true;
+            testButton.textContent = 'Testing...';
+
+            try {
+                console.log('Calling /api/login...');
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'test@test.com',
+                        password: 'password123'
+                    })
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+
+                let data;
+                try {
+                    data = await response.json();
+                    console.log('Response data:', data);
+                } catch (jsonError) {
+                    console.log('JSON parse error:', jsonError);
+                    data = { error: 'Invalid JSON response' };
+                }
+
+                if (!response.ok) {
+                    output.innerHTML = `<div class="error">Error ${response.status}: ${data.error || 'Unknown error'}</div>`;
+                } else {
+                    output.innerHTML = `<div class="success">Success! Token: ${data.token.slice(0, 20)}...</div>`;
+                }
+            } catch (fetchError) {
+                console.log('Fetch error:', fetchError);
+                output.innerHTML = `<div class="error">Fetch error: ${fetchError.message}</div>`;
+            } finally {
+                testButton.disabled = false;
+                testButton.textContent = 'Test Login';
+            }
+        }
+
+        function testSignup() {
+            console.log('Testing signup...');
+            const testButton = document.getElementById('signupTestButton');
+            const output = document.getElementById('signupOutput');
+
+            testButton.disabled = true;
+            testButton.textContent = 'Testing...';
+
+            fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: `test${Date.now()}@test.com`,
+                    password: 'password123'
+                })
+            })
+            .then(response => {
+                console.log('Signup response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Signup data:', data);
+                output.innerHTML = data.error
+                    ? `<div class="error">Error: ${data.error}</div>`
+                    : `<div class="success">Success! User ID: ${data.user.id}</div>`;
+            })
+            .catch(error => {
+                console.log('Signup error:', error);
+                output.innerHTML = `<div class="error">Signup error: ${error.message}</div>`;
+            })
+            .finally(() => {
+                testButton.disabled = false;
+                testButton.textContent = 'Test Signup';
+            });
+        }
+
+        function checkServer() {
+            console.log('Checking server...');
+            const output = document.getElementById('serverOutput');
+
+            fetch('/')
+            .then(response => {
+                output.innerHTML = `Server response: ${response.status} ${response.statusText}`;
+            })
+            .catch(error => {
+                output.innerHTML = `Server check failed: ${error.message}`;
+            });
+        }
+
+        function checkStaticFiles() {
+            console.log('Checking static files...');
+            const output = document.getElementById('staticOutput');
+            const files = ['/js/auth.js', '/js/i18n.js', '/css/styles.css'];
+
+            let results = [];
+            let checked = 0;
+
+            files.forEach(file => {
+                fetch(file)
+                .then(response => {
+                    results.push(`${file}: ${response.status}`);
+                    checked++;
+                    if (checked === files.length) {
+                        output.innerHTML = results.join('<br>');
+                    }
+                })
+                .catch(error => {
+                    results.push(`${file}: Failed`);
+                    checked++;
+                    if (checked === files.length) {
+                        output.innerHTML = results.join('<br>');
+                    }
+                });
+            });
+        }
+    </script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .success {
+            color: #28a745;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debt Manager - Login Test</h1>
+
+    <div class="test-section">
+        <h2>Server Status</h2>
+        <button onclick="checkServer()">Check Server</button>
+        <div id="serverOutput"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Static Files</h2>
+        <button onclick="checkStaticFiles()">Check Files</button>
+        <div id="staticOutput"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Login</h2>
+        <p>Test the actual login endpoint with credentials we know:</p>
+        <button id="testButton" onclick="testLogin()">Test Login</button>
+        <div id="output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Signup</h2>
+        <p>Create a new user:</p>
+        <button id="signupTestButton" onclick="testSignup()">Test Signup</button>
+        <div id="signupOutput"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Browser Test</h2>
+        <p>Open your browser console (F12) and go to:</p>
+        <ul>
+            <li><a href="/login.html" target="_blank">/login.html</a> - Test the actual login page</li>
+            <li><a href="/test-login.html" target="_blank">/test-login.html</a> - This page</li>
+            <li><a href="/" target="_blank">/</a> - Main app (requires login)</li>
+        </ul>
+        <p>Look for network errors in the console and network tab.</p>
+    </div>
+
+    <script>
+        // Auto-check server on load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkServer();
+            checkStaticFiles();
+        });
+    </script>
+</body>
+</html>
