@@ -55,11 +55,20 @@ db.exec(`
 `);
 
 // Upgrade a database created by an older version that lacks initial_amount.
+// Migration checks for older database versions
 if (db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'debts'").get()) {
-  const hasInitialAmount = db.pragma('table_info(debts)').some(column => column.name === 'initial_amount');
+  const columns = db.pragma('table_info(debts)');
+  
+  const hasInitialAmount = columns.some(column => column.name === 'initial_amount');
   if (!hasInitialAmount) {
     db.exec('ALTER TABLE debts ADD COLUMN initial_amount REAL NOT NULL DEFAULT 0');
+  }
+
+  const hasIsActive = columns.some(column => column.name === 'is_active');
+  if (!hasIsActive) {
+    db.exec('ALTER TABLE debts ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1');
   }
 }
 
 module.exports = db;
+
