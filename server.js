@@ -5,6 +5,7 @@ const path = require('path');
 const db = require('./database');
 
 const app = express();
+app.use(express.static(path.join(__dirname, 'public')));
 const port = process.env.PORT || 3000;
 
 function seedTestUser() {
